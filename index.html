@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI SPA Generator & Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'neon-dark': '#0a0a0a',
+              'neon-panel': 'rgba(20, 20, 20, 0.6)',
+              'neon-input': 'rgba(40, 40, 40, 0.5)',
+              'neon-border': 'rgba(255, 255, 255, 0.2)',
+              'text-main': '#e0e0e0',
+              'text-dark': '#000000',
+              'text-input': '#f0f0f0',
+              'primary': '#00f6ff', // neon-blue
+              'primary-hover': '#8cfaff',
+              'neon-blue': '#00f6ff',
+              'neon-pink': '#ff00ff',
+              'neon-green': '#39ff14',
+              'neon-purple': '#9d00ff',
+              'neon-yellow': '#ffff00'
+            },
+            boxShadow: {
+                'glow-blue': '0 0 15px theme(colors.neon-blue)',
+                'glow-pink': '0 0 15px theme(colors.neon-pink)',
+                'glow-green': '0 0 15px theme(colors.neon-green)',
+                'glow-purple': '0 0 15px theme(colors.neon-purple)',
+                'glow-yellow': '0 0 15px theme(colors.neon-yellow)',
+            },
+            keyframes: {
+              'pulse-glow': {
+                '0%, 100%': { boxShadow: '0 0 15px theme(colors.neon-blue)' },
+                '50%': { boxShadow: '0 0 25px theme(colors.neon-blue), 0 0 40px theme(colors.neon-blue)' },
+              },
+            },
+            animation: {
+              'pulse-glow': 'pulse-glow 4s ease-in-out infinite',
+            },
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        background-image: url('https://images.unsplash.com/photo-1534279539408-f2a8c5f59141?q=80&w=2070&auto=format&fit=crop');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+      }
+      .bg-neon-dark {
+        background-color: transparent !important;
+      }
+      /* Custom Glassmorphism Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(224, 224, 224, 0.5);
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(224, 224, 224, 0.8);
+      }
+      /* For Firefox */
+      html {
+        scrollbar-color: rgba(224, 224, 224, 0.5) transparent;
+        scrollbar-width: thin;
+      }
+    </style>
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.1.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+    "react/": "https://esm.sh/react@^19.1.0/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.8.0",
+    "@monaco-editor/react": "https://esm.sh/@monaco-editor/react@^4.6.0",
+    "react-dom": "https://esm.sh/react-dom@^19.1.1"
+  }
+}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-html.min.js"></script>
+</head>
+  <body class="bg-neon-dark">
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <div id="quick-nav-root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
