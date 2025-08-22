@@ -11,6 +11,7 @@ import ResponsePanel from './components/ResponsePanel';
 import ResizeHandle from './components/ResizeHandle';
 import QuickNav from './components/QuickNav';
 import CustomInstructionPanel from './components/CustomInstructionPanel';
+import CodebaseOverviewModal from './components/CodebaseOverviewModal';
 import { PanelLeftOpenIcon, PanelRightOpenIcon, OrchestrationIcon } from './components/icons';
 
 const MIN_PANEL_WIDTH = 200;
@@ -57,6 +58,9 @@ function App() {
   const [isInstructionPanelOpen, setIsInstructionPanelOpen] = useState(false);
   const [aiSupervisorInstruction, setAiSupervisorInstruction] = useState<string>(defaultAiSupervisorInstruction);
   const [systemOrchestratorInstruction, setSystemOrchestratorInstruction] = useState<string>(defaultSystemOrchestratorInstruction);
+  
+  // Codebase Overview Modal state
+  const [isOverviewModalOpen, setIsOverviewModalOpen] = useState(false);
 
 
   const hasResponse = useMemo(() => !!(aiResponse.previewContent || aiResponse.codeContent), [aiResponse]);
@@ -233,7 +237,14 @@ function App() {
           </div>
         </header>
       <main className="grid gap-2.5 p-2.5 flex-grow overflow-hidden" style={{ gridTemplateColumns }}>
-        <FileExplorer files={fileTree} activeFile={activeFile?.path ?? null} onFileSelect={handleFileSelect} onToggleCollapse={toggleLeftPanel} isCollapsed={isLeftPanelCollapsed} />
+        <FileExplorer
+          files={fileTree}
+          activeFile={activeFile?.path ?? null}
+          onFileSelect={handleFileSelect}
+          onToggleCollapse={toggleLeftPanel}
+          isCollapsed={isLeftPanelCollapsed}
+          onOpenOverview={() => setIsOverviewModalOpen(true)}
+        />
         {!isLeftPanelCollapsed && <ResizeHandle onMouseDown={(e) => startResize(e, 'left')} />}
         <CentralPanel
           activeFile={activeFile}
@@ -279,6 +290,13 @@ function App() {
         onAiInstructionChange={setAiSupervisorInstruction}
         systemInstruction={systemOrchestratorInstruction}
         onSystemInstructionChange={setSystemOrchestratorInstruction}
+      />
+      <CodebaseOverviewModal
+        isOpen={isOverviewModalOpen}
+        onClose={() => setIsOverviewModalOpen(false)}
+        githubToken={githubToken}
+        repo={repo}
+        fileTree={fileTree}
       />
     </div>
   );

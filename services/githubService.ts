@@ -1,4 +1,5 @@
 
+
 import { GitHubNode } from '../types';
 
 const GITHUB_API_BASE = 'https://api.github.com';
@@ -123,4 +124,36 @@ export const updateFile = async (
         method: 'PUT',
         body,
     });
+};
+
+const ALLOWED_EXTENSIONS = ['js', 'ts', 'tsx', 'jsx', 'html', 'css', 'scss', 'json', 'md', 'py', 'rb', 'go', 'java', 'php'];
+
+function collectFilePaths(nodes: GitHubNode[]): string[] {
+  let paths: string[] = [];
+  for (const node of nodes) {
+    if (node.type === 'blob') {
+      const ext = node.name.split('.').pop()?.toLowerCase();
+      if ((ext && ALLOWED_EXTENSIONS.includes(ext)) || node.name.startsWith('.') || node.name.toLowerCase().includes('config') || node.name.toLowerCase().includes('dockerfile') || node.name.toLowerCase().includes('readme')) {
+        paths.push(node.path);
+      }
+    } else if (node.type === 'tree' && node.children) {
+      paths.push(...collectFilePaths(node.children));
+    }
+  }
+  return paths;
+}
+
+export const getAllFileContents = async (token: string, owner: string, repo: string, tree: GitHubNode[]): Promise<{ path: string; content: string }[]> => {
+  const filePaths = collectFilePaths(tree);
+
+  const promises = filePaths.map(path =>
+    getFileContent(token, owner, repo, path)
+      .then(fileData => ({ path, content: fileData.content }))
+      .catch(error => {
+        console.warn(`Failed to fetch ${path}: ${error.message}`);
+        return { path, content: `/* Error fetching file content for ${path} */` };
+      })
+  );
+
+  return Promise.all(promises);
 };

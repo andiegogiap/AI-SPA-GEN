@@ -214,3 +214,53 @@ Now, generate the JSON object.`;
         return { suggestions: [], hint: null };
     }
 };
+
+export const generateCodebaseOverview = async (concatenatedFiles: string): Promise<string> => {
+    const model = 'gemini-2.5-flash';
+    const systemInstruction = `You are an expert software architect. Your task is to analyze a given codebase, which is provided as a single string of concatenated files, and generate a high-level overview.
+
+Your output **MUST** be in well-structured Markdown format.
+
+Please include the following sections in your analysis:
+
+### 🚀 Project Purpose
+A brief, one-paragraph description of what this application does.
+
+### 🛠️ Technologies & Libraries
+A bulleted list of the main technologies, frameworks, and significant libraries used.
+
+### 🏗️ Key Components Breakdown
+A description of the main files/components and their roles and responsibilities. Structure this as a bulleted list where each item is a file path followed by its description.
+
+### 💡 Potential Improvements
+A bulleted list of actionable suggestions for refactoring, performance optimization, architectural changes, or other potential improvements.
+
+Here is the concatenated codebase:
+---
+${concatenatedFiles}
+---
+`;
+
+    try {
+        const aiClient = getAiClient();
+        const response = await aiClient.models.generateContent({
+            model: model,
+            contents: systemInstruction,
+            config: {
+                temperature: 0.2,
+            },
+        });
+
+        const text = response.text;
+        if (!text) {
+            throw new Error("Received an empty response from the AI for codebase overview.");
+        }
+        return text;
+    } catch (error) {
+        console.error("Error calling Gemini API for codebase overview:", error);
+        if (error instanceof Error) {
+            throw new Error(`[Gemini API Error] ${error.message}`);
+        }
+        throw new Error("An unknown error occurred while generating the codebase overview.");
+    }
+};

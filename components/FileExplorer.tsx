@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { GitHubNode } from '../types';
-import { PanelLeftCloseIcon, CodeIcon, FolderIcon, FolderOpenIcon, FileIcon } from './icons';
+import { PanelLeftCloseIcon, CodeIcon, FolderIcon, FolderOpenIcon, FileIcon, BookOpenIcon } from './icons';
 
 const getFileIcon = (fileName: string) => {
     const extension = fileName.split('.').pop()?.toLowerCase();
@@ -72,7 +72,8 @@ const FileExplorer: React.FC<{
   onFileSelect: (fileName: string) => void;
   onToggleCollapse: () => void;
   isCollapsed: boolean;
-}> = ({ files, activeFile, onFileSelect, onToggleCollapse, isCollapsed }) => {
+  onOpenOverview: () => void;
+}> = ({ files, activeFile, onFileSelect, onToggleCollapse, isCollapsed, onOpenOverview }) => {
   if (isCollapsed) {
     return null;
   }
@@ -83,9 +84,14 @@ const FileExplorer: React.FC<{
         <h2 className="text-lg font-bold text-primary truncate" style={{ textShadow: '0 0 5px #00f6ff' }}>
           File Explorer
         </h2>
-        <button onClick={onToggleCollapse} title="Collapse Panel" className="text-text-main hover:text-primary transition-colors flex-shrink-0 ml-2">
-            <PanelLeftCloseIcon />
-        </button>
+        <div className="flex items-center gap-2">
+            <button onClick={onOpenOverview} title="Codebase Overview" className="text-text-main hover:text-primary transition-colors">
+                <BookOpenIcon />
+            </button>
+            <button onClick={onToggleCollapse} title="Collapse Panel" className="text-text-main hover:text-primary transition-colors flex-shrink-0">
+                <PanelLeftCloseIcon />
+            </button>
+        </div>
       </div>
       <div className="flex-grow overflow-y-auto">
         {files.map(node => (
